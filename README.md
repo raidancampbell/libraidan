@@ -18,3 +18,14 @@ The `roper` package implements more advanced "operator-style" functions.  The ma
 #### `rstrings`
 
 The `rstrings` package implements more niche or abbreviated string functions.
+
+## TODO:
+
+ - [ ] lint code
+ - [ ] implement CI linting with cool badges
+ - [ ] revisit `rcollections` after reviewing golang's type system
+ - [ ] add gitignore and license files
+ - [ ] tag initial release
+ - [ ] implement benchmark tests for `rcollections`
+ - [ ] implement `int` and `float64` maps
+ - [ ] add `map` / `reduce` / `filter` function implementation constants
