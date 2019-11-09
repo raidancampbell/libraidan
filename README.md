@@ -1,5 +1,6 @@
 # libraidan
 A general-purpose library from R. Aidan Campbell
+[![Go Report Card](https://goreportcard.com/badge/github.com/raidancampbell/libraidan)](https://goreportcard.com/report/github.com/raidancampbell/libraidan)
 
 **Caveat Emptor**: Use this library at your own risk.  This is merely a collection of functions and abstractions that I've found useful
 
