@@ -1,6 +1,6 @@
 package roper
 
-import "libraidan/pkg/rstrings"
+import "github.com/raidancampbell/libraidan/pkg/rstrings"
 
 func NilOr(a, b interface{}) interface{} {
 	if a != nil {
