@@ -4,6 +4,7 @@ import (
 	"fmt"
 )
 
+// StrMap is an interface for a String-based map
 type StrMap interface {
 	// Add adds the given key, value pair to the map.
 	// return indicates whether a value was overwritten
@@ -82,6 +83,7 @@ func (s strMap) AddAll(other StrMap) StrMap {
 	return newMap
 }
 
+// NewStrMap returns an implementation of the StrMap interface
 func NewStrMap() StrMap {
 	s := make(map[string]interface{})
 	return &strMap{s: s}

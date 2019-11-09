@@ -323,9 +323,8 @@ func TestStrMap_Map(t *testing.T) {
 		s := val.(string)
 		if strings.HasSuffix(s, "val") {
 			return s + "idated"
-		} else {
-			return s
 		}
+		return s
 	}
 
 	actual := s.Map(f)

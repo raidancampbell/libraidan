@@ -22,13 +22,13 @@ func GetMyFuncName() string {
 	return fName
 }
 
-// GetMyFuncName returns the caller's absolute file path
+// GetMyFileName returns the caller's absolute file path
 func GetMyFileName() string {
 	fName, _, _ := GetCallerDetails(1)
 	return fName
 }
 
-// GetMyFuncName returns the caller's line number
+// GetMyLineNumber returns the caller's line number
 func GetMyLineNumber() int {
 	_, _, line := GetCallerDetails(1)
 	return line
