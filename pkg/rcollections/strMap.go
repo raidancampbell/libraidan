@@ -61,21 +61,21 @@ type StrMap interface {
 	// Since the accumulator is an interface, the function must handle an uninitialized accumulator and type it appropriately
 	Reduce(func(key string, val interface{}, acc interface{}) interface{}) interface{}
 	// innerMap is an accessor for this library
-	innerMap() map[string] interface{}
+	innerMap() map[string]interface{}
 }
 
 type strMap struct {
-	s map[string] interface{}
+	s map[string]interface{}
 }
 
 // AddAll overwrites the exiting keys
 func (s strMap) AddAll(other StrMap) StrMap {
 	newMap := NewStrMap()
-	
+
 	for k, v := range s.s {
 		newMap.innerMap()[k] = v
 	}
-	
+
 	for ok, ov := range other.innerMap() {
 		newMap.innerMap()[ok] = ov
 	}
@@ -83,10 +83,9 @@ func (s strMap) AddAll(other StrMap) StrMap {
 }
 
 func NewStrMap() StrMap {
-	s := make(map[string] interface{})
-	return &strMap{s : s}
+	s := make(map[string]interface{})
+	return &strMap{s: s}
 }
-
 
 func (s strMap) Contains(needle string) bool {
 	for k := range s.s {
@@ -133,7 +132,7 @@ func (s strMap) Remove(key string) StrMap {
 	return newStrMap
 }
 
-func (s strMap) RemoveAll(keys [] string) StrMap {
+func (s strMap) RemoveAll(keys []string) StrMap {
 	otherKeySet := NewStrMap()
 	for _, key := range keys {
 		otherKeySet.innerMap()[key] = nil
@@ -142,7 +141,7 @@ func (s strMap) RemoveAll(keys [] string) StrMap {
 }
 
 func (s strMap) ContainsValue(needle interface{}) bool {
-	for _, v := range s.s{
+	for _, v := range s.s {
 		if v == needle {
 			return true
 		}
@@ -152,7 +151,7 @@ func (s strMap) ContainsValue(needle interface{}) bool {
 
 func (s strMap) ValueFrequency(needle interface{}) int {
 	freq := 0
-	for _, v := range s.s{
+	for _, v := range s.s {
 		if v == needle {
 			freq++
 		}

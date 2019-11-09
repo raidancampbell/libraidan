@@ -269,7 +269,7 @@ func TestStrMap_Equals(t *testing.T) {
 	assert.False(t, s.Equals(o))
 
 	o = o.Remove("quxkey")
-	o = o.Add( "barkey", "barval")
+	o = o.Add("barkey", "barval")
 	assert.False(t, s.Equals(o))
 
 	o = o.Add("fookey", "fooval")
