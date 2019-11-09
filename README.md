@@ -32,7 +32,7 @@ The `rruntime` package contains useful runtime or meta functions.
  - [X] implement CI linting with cool badges
  - [ ] revisit `rcollections` after reviewing golang's type system
  - [X] add gitignore and license files
- - [ ] tag initial release
+ - [X] tag initial release
  - [ ] implement benchmark tests for `rcollections`
  - [ ] implement `int` and `float64` maps
  - [ ] add `map` / `reduce` / `filter` function implementation constants
