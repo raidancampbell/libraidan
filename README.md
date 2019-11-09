@@ -28,10 +28,10 @@ The `rruntime` package contains useful runtime or meta functions.
 
 ## TODO:
 
- - [ ] lint code
- - [ ] implement CI linting with cool badges
+ - [X] lint code
+ - [X] implement CI linting with cool badges
  - [ ] revisit `rcollections` after reviewing golang's type system
- - [ ] add gitignore and license files
+ - [X] add gitignore and license files
  - [ ] tag initial release
  - [ ] implement benchmark tests for `rcollections`
  - [ ] implement `int` and `float64` maps
