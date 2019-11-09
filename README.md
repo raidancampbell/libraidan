@@ -19,6 +19,10 @@ The `roper` package implements more advanced "operator-style" functions.  The ma
 
 The `rstrings` package implements more niche or abbreviated string functions.
 
+#### `rruntime`
+
+The `rruntime` package contains useful runtime or meta functions.
+
 ## TODO:
 
  - [ ] lint code
