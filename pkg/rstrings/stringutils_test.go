@@ -28,7 +28,7 @@ func TestDefaultIfEmpty(t *testing.T) {
 }
 
 func TestMapToString(t *testing.T) {
-	v := make(map[interface{}]interface{})
+	v := make(map[string]interface{})
 	v["foo"] = "bar"
 	assert.Equal(t,"{\"foo\":\"bar\"}", MapToString(v))
 	assert.Equal(t,"{\"foo\":\"bar\"}", MapToString(v, false))
@@ -41,5 +41,5 @@ func TestMapToString(t *testing.T) {
 	v["qux"] = nil
 	assert.Contains(t, MapToString(v), "\"qux\":null")
 
-	assert.Equal(t, "{}", MapToString(make(map[interface{}]interface{})))
+	assert.Equal(t, "{}", MapToString(make(map[string]interface{})))
 }
