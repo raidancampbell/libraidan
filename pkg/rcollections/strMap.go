@@ -89,6 +89,11 @@ func NewStrMap() StrMap {
 	return &strMap{s: s}
 }
 
+// NewStrMapFrom returns an implementation of the StrMap interface, pre-populated with the given map
+func NewStrMapFrom(orig map[string] interface{}) StrMap {
+	return &strMap{s: orig}
+}
+
 func (s strMap) Contains(needle string) bool {
 	for k := range s.s {
 		if needle == k {

@@ -367,3 +367,13 @@ func TestStrMap_Reduce(t *testing.T) {
 
 	assert.Nil(t, NewStrMap().Reduce(f))
 }
+
+func TestNewStrMapFrom(t *testing.T) {
+	m := make(map[string] interface{})
+	m["foo"] = "bar"
+	s := NewStrMapFrom(m)
+	assert.NotNil(t, s)
+	assert.True(t, s.Contains("foo"))
+	assert.True(t, s.ContainsValue("bar"))
+	assert.Equal(t, s.GetWithDefault("foo", ""), "bar")
+}
