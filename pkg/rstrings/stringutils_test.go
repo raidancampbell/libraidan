@@ -17,8 +17,18 @@ func TestIsEmpty(t *testing.T) {
 	assert.False(t, IsEmpty("no leading ir trailing"))
 }
 
+func TestDefaultIfEmpty(t *testing.T) {
+	assert.Equal(t, "foo", DefaultIfEmpty("", "foo"))
+	assert.Equal(t, "foo", DefaultIfEmpty("foo", ""))
+	assert.Equal(t, "foo", DefaultIfEmpty("foo", "bar"))
+	assert.Equal(t, "", DefaultIfEmpty("", ""))
+	assert.Equal(t, "foo", DefaultIfEmpty("   ", "foo"))
+	assert.Equal(t, "foo", DefaultIfEmpty("foo", "   "))
+	assert.Equal(t, "   ", DefaultIfEmpty("", "   "))
+}
+
 func TestMapToString(t *testing.T) {
-	v := make(map[string]interface{})
+	v := make(map[interface{}]interface{})
 	v["foo"] = "bar"
 	assert.Equal(t,"{\"foo\":\"bar\"}", MapToString(v))
 	assert.Equal(t,"{\"foo\":\"bar\"}", MapToString(v, false))
@@ -31,5 +41,5 @@ func TestMapToString(t *testing.T) {
 	v["qux"] = nil
 	assert.Contains(t, MapToString(v), "\"qux\":null")
 
-	assert.Equal(t, "{}", MapToString(make(map[string]interface{})))
+	assert.Equal(t, "{}", MapToString(make(map[interface{}]interface{})))
 }
