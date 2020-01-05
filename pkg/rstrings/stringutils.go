@@ -30,9 +30,9 @@ func DefaultIfEmpty(s, deflt string) string {
 // MapToString converts the given map to a string.
 // The variadic bool is a flag indicating whether the result should be prettified with newlines and whitespace
 // default is false, for compatibility
-func MapToString(input map[string] interface{}, isPretty...bool) string {
+func MapToString(input map[string]interface{}, isPretty ...bool) string {
 	var (
-		b []byte
+		b   []byte
 		err error
 	)
 

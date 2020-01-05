@@ -76,7 +76,7 @@ func TestAllZero(t *testing.T) {
 		args args
 		want bool
 	}{
-		{"happy_false", args{[]int{1,2,3}}, false},
+		{"happy_false", args{[]int{1, 2, 3}}, false},
 		{"happy_true", args{[]int{0, 0, 0, 0}}, true},
 		{"void", args{[]int{}}, true},
 		{"single", args{[]int{0}}, true},

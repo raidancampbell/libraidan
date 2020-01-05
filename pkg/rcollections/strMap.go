@@ -90,7 +90,7 @@ func NewStrMap() StrMap {
 }
 
 // NewStrMapFrom returns an implementation of the StrMap interface, pre-populated with the given map
-func NewStrMapFrom(orig map[string] interface{}) StrMap {
+func NewStrMapFrom(orig map[string]interface{}) StrMap {
 	return &strMap{s: orig}
 }
 

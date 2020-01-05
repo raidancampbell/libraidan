@@ -369,7 +369,7 @@ func TestStrMap_Reduce(t *testing.T) {
 }
 
 func TestNewStrMapFrom(t *testing.T) {
-	m := make(map[string] interface{})
+	m := make(map[string]interface{})
 	m["foo"] = "bar"
 	s := NewStrMapFrom(m)
 	assert.NotNil(t, s)

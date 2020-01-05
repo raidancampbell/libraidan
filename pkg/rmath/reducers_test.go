@@ -14,9 +14,9 @@ func TestMax(t *testing.T) {
 		args    args
 		wantMax int
 	}{
-		{"happy", args{[]int{1,2,3}}, 3},
-		{"big", args{[]int{1,2,30000}}, 30000},
-		{"negative", args{[]int{-1,-2,-3}}, -1},
+		{"happy", args{[]int{1, 2, 3}}, 3},
+		{"big", args{[]int{1, 2, 30000}}, 30000},
+		{"negative", args{[]int{-1, -2, -3}}, -1},
 		{"abuse", args{[]int{}}, math.MinInt64},
 	}
 	for _, tt := range tests {
@@ -37,9 +37,9 @@ func TestMin(t *testing.T) {
 		args    args
 		wantMin int
 	}{
-		{"happy", args{[]int{1,2,3}}, 1},
-		{"big", args{[]int{1,2,30000}}, 1},
-		{"negative", args{[]int{-1,-2,-3}}, -3},
+		{"happy", args{[]int{1, 2, 3}}, 1},
+		{"big", args{[]int{1, 2, 30000}}, 1},
+		{"negative", args{[]int{-1, -2, -3}}, -3},
 		{"abuse", args{[]int{}}, math.MaxInt64},
 	}
 	for _, tt := range tests {
@@ -60,9 +60,9 @@ func TestSum(t *testing.T) {
 		args    args
 		wantSum int
 	}{
-		{"happy", args{[]int{1,2,3}}, 6},
-		{"big", args{[]int{1,2,30000}}, 30003},
-		{"negative", args{[]int{-1,-2,-3}}, -6},
+		{"happy", args{[]int{1, 2, 3}}, 6},
+		{"big", args{[]int{1, 2, 30000}}, 30003},
+		{"negative", args{[]int{-1, -2, -3}}, -6},
 		{"abuse", args{[]int{}}, 0},
 	}
 	for _, tt := range tests {

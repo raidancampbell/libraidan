@@ -30,9 +30,9 @@ func TestDefaultIfEmpty(t *testing.T) {
 func TestMapToString(t *testing.T) {
 	v := make(map[string]interface{})
 	v["foo"] = "bar"
-	assert.Equal(t,"{\"foo\":\"bar\"}", MapToString(v))
-	assert.Equal(t,"{\"foo\":\"bar\"}", MapToString(v, false))
-	assert.Equal(t,"{\n  \"foo\": \"bar\"\n}", MapToString(v, true))
+	assert.Equal(t, "{\"foo\":\"bar\"}", MapToString(v))
+	assert.Equal(t, "{\"foo\":\"bar\"}", MapToString(v, false))
+	assert.Equal(t, "{\n  \"foo\": \"bar\"\n}", MapToString(v, true))
 
 	v["baz"] = 2
 	assert.Contains(t, MapToString(v), "\"foo\":\"bar\"")
