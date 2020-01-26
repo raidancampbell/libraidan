@@ -17,9 +17,11 @@ var (
 func init() {
 	// these are used as constants for type comparison.
 	// unfortunately we need to access them via reflection, so an init function is required
-	cancCtx, _ := context.WithCancel(context.Background())
+	cancCtx, c := context.WithCancel(context.Background())
+	c() // immediately cancel to prevent resource leaks
 	cancCtxTyp = reflect.ValueOf(cancCtx).Elem().Type()
-	timeCtx, _ := context.WithDeadline(context.Background(), time.Time{})
+	timeCtx, c := context.WithDeadline(context.Background(), time.Time{})
+	c()
 	timeCtxTyp = reflect.ValueOf(timeCtx).Elem().Type()
 }
 

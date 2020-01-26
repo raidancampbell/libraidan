@@ -8,9 +8,6 @@ import (
 	"time"
 )
 
-// test with cancel
-// test with timeout
-
 func TestSerializeContext(t *testing.T) {
 	foobar := context.WithValue(context.Background(), "foo", "bar")
 	assert.Equal(t, "bar", foobar.Value("foo"))
@@ -107,11 +104,11 @@ func TestSerialize_func(t *testing.T) {
 	foobar := testonly.AddKeyToContext(context.Background(), func() string {
 		return "foo"
 	})
-	assert.NotPanics(t, func() { Serialize(foobar) })
+	assert.NotPanics(t, func() { _, _ = Serialize(foobar) })
 	_, err := Serialize(foobar, SerializeOpts{IgnoreFunctions: false})
 	assert.NotNil(t, err)
 
-	assert.NotPanics(t, func() { Serialize(foobar) })
+	assert.NotPanics(t, func() { _, _ = Serialize(foobar) })
 	serialized, err := Serialize(foobar, SerializeOpts{IgnoreFunctions: true})
 	assert.Nil(t, err)
 	assert.NotNil(t, serialized)
@@ -132,13 +129,15 @@ func TestDeserialize_nestedSameKey(t *testing.T) {
 }
 
 func TestDeserialize_nestedWithCancel(t *testing.T) {
-	cancCtxP, _ := context.WithCancel(context.Background())
+	cancCtxP, canc := context.WithCancel(context.Background())
 	parentctx := context.WithValue(cancCtxP, "name", "parent")
 	childctx := context.WithValue(parentctx, "name", "child")
-	cancCtxC, _ := context.WithCancel(childctx)
+	cancCtxC, canc2 := context.WithCancel(childctx)
 	assert.Equal(t, "child", cancCtxC.Value("name"))
 	assert.Equal(t, "parent", parentctx.Value("name"))
 	assert.Equal(t, nil, cancCtxP.Value("name"))
+	assert.NotNil(t, canc)
+	assert.NotNil(t, canc2)
 
 	serialized, err := Serialize(cancCtxC)
 	assert.Nil(t, err)
@@ -152,13 +151,15 @@ func TestDeserialize_nestedWithCancel(t *testing.T) {
 }
 
 func TestDeserialize_nestedWithDeadline(t *testing.T) {
-	deadlineCtx, _ := context.WithDeadline(context.Background(), time.Now().Add(5*time.Second))
+	deadlineCtx, canc := context.WithDeadline(context.Background(), time.Now().Add(5*time.Second))
 	parentctx := context.WithValue(deadlineCtx, "name", "parent")
 	childctx := context.WithValue(parentctx, "name", "child")
-	cancCtxC, _ := context.WithCancel(childctx)
+	cancCtxC, canc2 := context.WithCancel(childctx)
 	assert.Equal(t, "child", cancCtxC.Value("name"))
 	assert.Equal(t, "parent", parentctx.Value("name"))
 	assert.Equal(t, nil, deadlineCtx.Value("name"))
+	assert.NotNil(t, canc)
+	assert.NotNil(t, canc2)
 
 	serialized, err := Serialize(cancCtxC, SerializeOpts{
 		RetainDeadline: true,
@@ -172,7 +173,7 @@ func TestDeserialize_nestedWithDeadline(t *testing.T) {
 	deadline, ok := ctx.Deadline()
 	assert.True(t, ok)
 
-	remainingMs := deadline.Sub(time.Now()).Milliseconds()
+	remainingMs := time.Until(deadline).Milliseconds()
 	assert.LessOrEqual(t, remainingMs, int64(5000))
 	assert.GreaterOrEqual(t, remainingMs, int64(1))
 }
