@@ -19,6 +19,6 @@ func TestIsDefaultValue(t *testing.T) {
 
 	assert.True(t, IsDefaultValue(f{}))
 
-	inst := f{x:1}
+	inst := f{x: 1}
 	assert.False(t, IsDefaultValue(inst))
 }
