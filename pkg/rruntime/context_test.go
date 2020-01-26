@@ -3,7 +3,6 @@ package rruntime
 import (
 	"context"
 	"github.com/stretchr/testify/assert"
-	"libraidan/pkg/rruntime/testonly"
 	"testing"
 	"time"
 )
@@ -89,19 +88,9 @@ func TestDeserializeContext_SimpleStruct(t *testing.T) {
 	assert.Equal(t, "foo", ctx.Value(k{}))
 }
 
-func TestDeserializeContext_ForeignPackageStruct(t *testing.T) {
-	foobar := testonly.AddKeyToContext(context.Background(), "foo")
-
-	serialized, err := Serialize(foobar)
-	assert.Nil(t, err)
-	assert.NotNil(t, serialized)
-	ctx, _, _ := Deserialize(serialized)
-	assert.Equal(t, "foo", testonly.ReadFromContext(ctx))
-}
-
 // unsupported, will fail but shouldn't panic
 func TestSerialize_func(t *testing.T) {
-	foobar := testonly.AddKeyToContext(context.Background(), func() string {
+	foobar := context.WithValue(context.Background(), k{}, func() string {
 		return "foo"
 	})
 	assert.NotPanics(t, func() { _, _ = Serialize(foobar) })
