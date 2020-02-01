@@ -1,3 +1,4 @@
+// Deprecated: use GoDS instead
 package rcollections
 
 import (

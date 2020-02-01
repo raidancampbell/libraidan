@@ -9,30 +9,30 @@ A general-purpose library from R. Aidan Campbell
 ## Structure & Usage
 This library prefixes each package name with `r` to prevent namespace collisions.  Currently this is a `pkg`-only library, meaning it's meant to be imported and used in `golang` code.  There is no command-line interface
 
+Import the desired package
+```
+import "github.com/raidancampbell/libraidan/pkg/rstrings"
+```
+
 ## Packages
-#### `rcollections` 
+#### [~~rcollections~~](https://godoc.org/github.com/raidancampbell/libraidan/pkg/rcollections) 
 
-The `rcollections` package implements several common map and set operations, such as `Contains` or `GetWithDefault`, as well as the more advanced `map`, `reduce`, and `filter` operations.  These are provided one for each type, because I don't know enough golang to write it cleaner.  PRs welcome.
+**Deprecated, use a package like [GoDS](https://github.com/emirpasic/gods) instead**
 
-#### `roper`
+The ~~rcollections~~ package implements several common map and set operations, such as `Contains` or `GetWithDefault`, as well as the more advanced `map`, `reduce`, and `filter` operations.  These are provided one for each type, because I don't know enough golang to write it cleaner.  PRs welcome.
 
-The `roper` package implements more advanced "operator-style" functions.  The main influence for this is Python's truthy `or` operator: the first non-falsy operand is returned. 
+#### [`rmath`](https://godoc.org/github.com/raidancampbell/libraidan/pkg/rmath)
 
-#### `rstrings`
+The `rmath` package contains math reducing operators, such as `sum`, `min`, and `max`, etc.
+
+#### [`roper`](https://godoc.org/github.com/raidancampbell/libraidan/pkg/roper)
+
+The `roper` package implements more advanced "operator-style" functions.  The main influence for this is Python's coalescing `or` operator: the first non-falsy operand is returned. 
+
+#### [`rstrings`](https://godoc.org/github.com/raidancampbell/libraidan/pkg/rstrings)
 
 The `rstrings` package implements more niche or abbreviated string functions.
 
-#### `rruntime`
+#### [`rruntime`](https://godoc.org/github.com/raidancampbell/libraidan/pkg/rruntime)
 
 The `rruntime` package contains useful runtime or meta functions.
-
-## TODO:
-
- - [X] lint code
- - [X] implement CI linting with cool badges
- - [ ] revisit `rcollections` after reviewing golang's type system
- - [X] add gitignore and license files
- - [X] tag initial release
- - [ ] implement benchmark tests for `rcollections`
- - [ ] implement `int` and `float64` maps
- - [ ] add `map` / `reduce` / `filter` function implementation constants
