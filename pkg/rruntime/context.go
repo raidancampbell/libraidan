@@ -38,13 +38,19 @@ type SerializeOpts struct {
 	IgnoreFunctions bool
 }
 
-// Serialize serializes a given context's values, deadlines, and cancellations into a byte array
+// deprecated: use SerializeCtx
+var Serialize = SerializeCtx
+
+// deprecated: use DeserializeCtx
+var Deserialize = DeserializeCtx
+
+// SerializeCtx serializes a given context's values, deadlines, and cancellations into a byte array
 // If any function has been added to the context as a value, an error will be returned
 // duplicate context keys aren't supported: the context stack is being frozen at the point of serialization.
 // the deepest (furthest from base context) key is used.
 // an optional parameter is used to specify serialization options.
 // omitted options retain cancel/deadlines, but will not ignore functions
-func Serialize(ctx context.Context, opts ...SerializeOpts) ([]byte, error) {
+func SerializeCtx(ctx context.Context, opts ...SerializeOpts) ([]byte, error) {
 	buf := new(bytes.Buffer)
 	e := gob.NewEncoder(buf)
 
@@ -80,9 +86,9 @@ func Serialize(ctx context.Context, opts ...SerializeOpts) ([]byte, error) {
 	return buf.Bytes(), err
 }
 
-// Deserialize inflates the byte-array output of Serialize into a context and optional CancelFunc
+// DeserializeCtx inflates the byte-array output of SerializeCtx into a context and optional CancelFunc
 // The options specified during serialization dictate whether CancelFunc is non-nil
-func Deserialize(ser []byte) (context.Context, context.CancelFunc, error) {
+func DeserializeCtx(ser []byte) (context.Context, context.CancelFunc, error) {
 	dec := gob.NewDecoder(bytes.NewReader(ser))
 	data := contextData{}
 	err := dec.Decode(&data)
