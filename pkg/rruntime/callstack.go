@@ -1,3 +1,5 @@
+// package rruntime contains useful runtime or meta functions, including caller (function, filename, line) introspection
+// and context.Context serialization/deserialization
 package rruntime
 
 import (

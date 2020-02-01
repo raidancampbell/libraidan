@@ -1,3 +1,4 @@
+// Package roper implements operator-style functions, largely around coalescence or variadic operations
 package roper
 
 import "github.com/raidancampbell/libraidan/pkg/rstrings"

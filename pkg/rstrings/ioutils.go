@@ -1,3 +1,4 @@
+// package rstrings contains string and file-based operations, such as reading a file into a string
 package rstrings
 
 import (
