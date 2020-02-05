@@ -46,3 +46,27 @@ func MapToString(input map[string]interface{}, isPretty ...bool) string {
 	}
 	return string(b)
 }
+
+func LeftPad(input string, length int) string {
+	return LeftPadWith(input, ' ', length)
+}
+
+func LeftPadWith(input string, char rune, length int) string {
+	l := length - len(input)
+	if l <= 0 {
+		return input
+	}
+	return strings.Repeat(string(char), l) + input
+}
+
+func RightPad(input string, length int) string {
+	return RightPadWith(input, ' ', length)
+}
+
+func RightPadWith(input string, char rune, length int) string {
+	l := length - len(input)
+	if l <= 0 {
+		return input
+	}
+	return input + strings.Repeat(string(char), l)
+}
