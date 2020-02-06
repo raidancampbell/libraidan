@@ -35,3 +35,12 @@ func AnyZero(a ...int) bool {
 	}
 	return false
 }
+
+// Any returns a bool indicating whether any of the given bools are true
+func Any(a ...bool) bool {
+	flag := false
+	for _, v := range a {
+		flag = flag || v
+	}
+	return flag
+}

@@ -33,3 +33,12 @@ func AllZero(a ...int) bool {
 	}
 	return acc
 }
+
+// All returns a bool indicating that all of the given booleans are true
+func All(a ...bool) bool {
+	flag := true
+	for _, v := range a {
+		flag = flag && v
+	}
+	return flag
+}
