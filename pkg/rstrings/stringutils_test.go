@@ -43,3 +43,54 @@ func TestMapToString(t *testing.T) {
 
 	assert.Equal(t, "{}", MapToString(make(map[string]interface{})))
 }
+
+func TestLeftPad(t *testing.T) {
+	type args struct {
+		input  string
+		length int
+	}
+	tests := []struct {
+		name string
+		args args
+		want string
+	}{
+		{"untouched", args{"foo", 3}, "foo"},
+		{"too large", args{"foo", 1}, "foo"},
+		{"empty", args{"", 3}, "   "},
+		{"negative", args{"foo", -1}, "foo"},
+		{"happy", args{"foo", 5}, "  foo"},
+	}
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			if got := LeftPad(tt.args.input, tt.args.length); got != tt.want {
+				t.Errorf("LeftPad() = %v, want %v", got, tt.want)
+			}
+		})
+	}
+}
+
+
+func TestRightPad(t *testing.T) {
+	type args struct {
+		input  string
+		length int
+	}
+	tests := []struct {
+		name string
+		args args
+		want string
+	}{
+		{"untouched", args{"foo", 3}, "foo"},
+		{"too large", args{"foo", 1}, "foo"},
+		{"empty", args{"", 3}, "   "},
+		{"negative", args{"foo", -1}, "foo"},
+		{"happy", args{"foo", 5}, "foo  "},
+	}
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			if got := RightPad(tt.args.input, tt.args.length); got != tt.want {
+				t.Errorf("LeftPad() = %v, want %v", got, tt.want)
+			}
+		})
+	}
+}
