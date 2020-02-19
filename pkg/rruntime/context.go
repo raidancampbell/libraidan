@@ -93,7 +93,7 @@ func DeserializeCtx(ser []byte) (context.Context, context.CancelFunc, error) {
 	data := contextData{}
 	err := dec.Decode(&data)
 	if err != nil {
-		return nil, nil, err
+		return context.Background(), func(){}, err
 	}
 
 	// make a new base context
