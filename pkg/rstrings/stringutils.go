@@ -47,10 +47,14 @@ func MapToString(input map[string]interface{}, isPretty ...bool) string {
 	return string(b)
 }
 
+// LeftPad prepend-pads the given string to the desired length with space characters.
+// See LeftPadWith for implementation details
 func LeftPad(input string, length int) string {
 	return LeftPadWith(input, ' ', length)
 }
 
+// LeftPadWith prepend-pads the given string to the given length with the given rune.
+// If the input string is already longer than the desired length, it is returned and NOT truncated
 func LeftPadWith(input string, char rune, length int) string {
 	l := length - len(input)
 	if l <= 0 {
@@ -59,10 +63,14 @@ func LeftPadWith(input string, char rune, length int) string {
 	return strings.Repeat(string(char), l) + input
 }
 
+// RightPad append-pads the given string to the desired length with space characters.
+// See RightPadWith for implementation details
 func RightPad(input string, length int) string {
 	return RightPadWith(input, ' ', length)
 }
 
+// RightPadWith append-pads the given string to the given length with the given rune.
+// If the input string is already longer than the desired length, it is returned and NOT truncated
 func RightPadWith(input string, char rune, length int) string {
 	l := length - len(input)
 	if l <= 0 {

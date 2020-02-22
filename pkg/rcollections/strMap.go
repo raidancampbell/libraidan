@@ -1,3 +1,4 @@
+// Package rcollections contains a (deprecated) interface and implementation for collections
 // Deprecated: use GoDS instead
 package rcollections
 
