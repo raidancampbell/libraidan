@@ -38,9 +38,11 @@ type SerializeOpts struct {
 	IgnoreFunctions bool
 }
 
+// Serialize serializes a given context.  See SerializeCtx
 // deprecated: use SerializeCtx
 var Serialize = SerializeCtx
 
+// Deserialize deserializes the given output of Serialize.  See DeserializeCtx
 // deprecated: use DeserializeCtx
 var Deserialize = DeserializeCtx
 
@@ -93,7 +95,7 @@ func DeserializeCtx(ser []byte) (context.Context, context.CancelFunc, error) {
 	data := contextData{}
 	err := dec.Decode(&data)
 	if err != nil {
-		return context.Background(), func(){}, err
+		return context.Background(), func() {}, err
 	}
 
 	// make a new base context
@@ -174,9 +176,8 @@ func buildMap(ctx context.Context, s contextData) contextData {
 	if parent.IsValid() && !parent.IsNil() {
 		// if there's a parent context, recurse
 		return buildMap(parent.Interface().(context.Context), s)
-	} else {
-		// not possible, but the compiler requires it.
-		// the parent context would be empty, and is caught in the beginning
-		return s
 	}
+	// not possible, but the compiler requires it.
+	// the parent context would be empty, and is caught in the beginning
+	return s
 }

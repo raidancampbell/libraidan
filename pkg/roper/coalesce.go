@@ -28,7 +28,7 @@ func ZeroOr(a, b int) int {
 
 // First is a coalescing function to return the first non-type-default argument in the variadic arg list
 // see IsDefaultValue for the default checking implementation
-func First(i ...interface{}) interface{}{
+func First(i ...interface{}) interface{} {
 	for _, v := range i {
 		if !IsDefaultValue(v) {
 			return v
@@ -36,8 +36,9 @@ func First(i ...interface{}) interface{}{
 	}
 	return nil
 }
+
 // Coalesce is an alias for First
-func Coalesce(i ...interface{}) interface{}{
+func Coalesce(i ...interface{}) interface{} {
 	return First(i...)
 }
 

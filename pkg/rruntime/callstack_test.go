@@ -28,7 +28,7 @@ func TestGetCallerDetails(t *testing.T) {
 	file, function, line := GetCallerDetails(0)
 	assert.True(t, strings.HasSuffix(file, "callstack_test.go"))
 	assert.True(t, strings.HasSuffix(function, "TestGetCallerDetails"))
-	assert.Equal(t, 10, line)
+	assert.Equal(t, 28, line)
 }
 
 func BenchmarkGetMyFileName(b *testing.B) {
@@ -61,5 +61,5 @@ func BenchmarkGetMyLineNumber(b *testing.B) {
 
 func TestGetMyLineNumber(t *testing.T) {
 	line := GetMyLineNumber()
-	assert.Equal(t, 27, line)
+	assert.Equal(t, 63, line)
 }

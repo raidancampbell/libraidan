@@ -69,7 +69,6 @@ func TestLeftPad(t *testing.T) {
 	}
 }
 
-
 func TestRightPad(t *testing.T) {
 	type args struct {
 		input  string

@@ -1,4 +1,4 @@
-// package rstrings contains string and file-based operations, such as reading a file into a string
+// Package rstrings contains string and file-based operations, such as reading a file into a string
 package rstrings
 
 import (
@@ -28,8 +28,8 @@ func FileToString(fname string) (result string, err error) {
 // CsvToMap takes the given filename, reads the file in CSV format, and returns a 2d map
 // first dimension is the column name, second dimension is the row values for that column.
 // input CSV file is expected to have a header row.
-func CsvToMap(fname string) (result map[string] []string, err error) {
-	result = make(map[string] []string)
+func CsvToMap(fname string) (result map[string][]string, err error) {
+	result = make(map[string][]string)
 
 	file, err := os.Open(fname)
 	if err != nil {
@@ -38,11 +38,11 @@ func CsvToMap(fname string) (result map[string] []string, err error) {
 	reader := csv.NewReader(file)
 	records, err := reader.ReadAll()
 
-	tmp := make(map[int] []string)
+	tmp := make(map[int][]string)
 	for i, record := range records { // for each row
-		if i == 0 {  // skip the header row
+		if i == 0 { // skip the header row
 			continue
-		} else {  // build the details indexed by column number
+		} else { // build the details indexed by column number
 			for colNum, entry := range record {
 				tmp[colNum] = append(tmp[colNum], entry)
 			}
