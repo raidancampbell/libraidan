@@ -78,3 +78,36 @@ func RightPadWith(input string, char rune, length int) string {
 	}
 	return input + strings.Repeat(string(char), l)
 }
+
+// EnsurePrefix prefixes the given string with the given prefix if it doesn't have it already
+// examples:
+// EnsurePrefix("foo", "f") = "foo"
+// EnsurePrefix("foo", "new-") = "new-foo"
+func EnsurePrefix(input string, prefix string) string {
+	if !strings.HasPrefix(input, prefix) {
+		input = prefix + input
+	}
+	return input
+}
+
+// EnsureSuffix suffixes the given string with the given suffix if it doesn't have it already
+// examples:
+// EnsureSuffix("foo", "o") = "foo"
+// EnsureSuffix("foo", "-new") = "foo-new"
+func EnsureSuffix(input string, suffix string) string {
+	if !strings.HasSuffix(input, suffix) {
+		input = input + suffix
+	}
+	return input
+}
+
+// EnsureWrapped wraps the given string with the given prefix/suffix if it doesn't have it already
+// examples:
+// EnsureWrapped("foo", "'") = "'foo'"
+// EnsureSuffix("fluff", "f") = "fluff"
+func EnsureWrapped(input string, wrapper string) string {
+	if len(input) == 0 {
+		return wrapper + wrapper
+	}
+	return EnsureSuffix(EnsurePrefix(input, wrapper), wrapper)
+}

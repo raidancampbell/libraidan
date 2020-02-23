@@ -93,3 +93,78 @@ func TestRightPad(t *testing.T) {
 		})
 	}
 }
+
+func TestEnsurePrefix(t *testing.T) {
+	type args struct {
+		input  string
+		prefix string
+	}
+	tests := []struct {
+		name string
+		args args
+		want string
+	}{
+		{"already exists", args{"foo", "f"}, "foo"},
+		{"doesn't exist", args{"foo", "new-"}, "new-foo"},
+		{"empty input", args{"", "f"}, "f"},
+		{"empty prefix", args{"foo", ""}, "foo"},
+		{"both empty", args{"", ""}, ""},
+	}
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			if got := EnsurePrefix(tt.args.input, tt.args.prefix); got != tt.want {
+				t.Errorf("EnsurePrefix() = %v, want %v", got, tt.want)
+			}
+		})
+	}
+}
+
+func TestEnsureSuffix(t *testing.T) {
+	type args struct {
+		input  string
+		suffix string
+	}
+	tests := []struct {
+		name string
+		args args
+		want string
+	}{
+		{"already exists", args{"foo", "o"}, "foo"},
+		{"doesn't exist", args{"foo", "-new"}, "foo-new"},
+		{"empty input", args{"", "f"}, "f"},
+		{"empty suffix", args{"foo", ""}, "foo"},
+		{"both empty", args{"", ""}, ""},
+	}
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			if got := EnsureSuffix(tt.args.input, tt.args.suffix); got != tt.want {
+				t.Errorf("EnsureSuffix() = %v, want %v", got, tt.want)
+			}
+		})
+	}
+}
+
+func TestEnsureWrapped(t *testing.T) {
+	type args struct {
+		input   string
+		wrapper string
+	}
+	tests := []struct {
+		name string
+		args args
+		want string
+	}{
+		{"already exists", args{"fluff", "f"}, "fluff"},
+		{"doesn't exist", args{"foo", "'"}, "'foo'"},
+		{"empty input", args{"", "f"}, "ff"},
+		{"empty wrapper", args{"foo", ""}, "foo"},
+		{"both empty", args{"", ""}, ""},
+	}
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			if got := EnsureWrapped(tt.args.input, tt.args.wrapper); got != tt.want {
+				t.Errorf("EnsureWrapped() = %v, want %v", got, tt.want)
+			}
+		})
+	}
+}
