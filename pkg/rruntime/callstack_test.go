@@ -50,7 +50,7 @@ func BenchmarkGetMyFuncName(b *testing.B) {
 
 func TestGetMyFuncName(t *testing.T) {
 	function := GetMyFuncName()
-	assert.True(t, strings.HasSuffix(function, "TestGetMyFuncName"))
+	assert.Equal(t, "TestGetMyFuncName", function)
 }
 
 func BenchmarkGetMyLineNumber(b *testing.B) {

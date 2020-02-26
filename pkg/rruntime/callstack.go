@@ -4,6 +4,7 @@ package rruntime
 
 import (
 	"runtime"
+	"strings"
 )
 
 // GetCallerDetails returns a (filename, function name, line number) tuple of the current callstack
@@ -15,7 +16,9 @@ func GetCallerDetails(stackSkip int) (string, string, int) {
 	n := runtime.Callers(2+stackSkip, pc)
 	frames := runtime.CallersFrames(pc[:n])
 	frame, _ := frames.Next()
-	return frame.File, frame.Function, frame.Line
+	fqfn := frame.Function
+	s := strings.Split(fqfn, ".")
+	return frame.File, s[len(s)-1], frame.Line
 }
 
 // GetMyFuncName returns the caller's function name
