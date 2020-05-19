@@ -35,13 +35,15 @@ func emptyDescriptor(_ context.Context) (context.Context, error) {
 
 //go:noinline
 func valueDescriptor(_ context.Context) (context.Context, error) {
-	ctx, _ := context.WithCancel(context.Background())
+	ctx, c := context.WithCancel(context.Background())
+	defer c()
 	return cancelDescriptor(ctx)
 }
 
 //go:noinline
 func cancelDescriptor(_ context.Context) (context.Context, error) {
-	ctx, _ := context.WithDeadline(context.Background(), time.Now())
+	ctx, c := context.WithDeadline(context.Background(), time.Now())
+	defer c()
 	return timerDescriptor(ctx)
 }
 
@@ -82,6 +84,8 @@ func doGetCtx() (context.Context, error) {
 		}
 
 		// build up the legal values for each implementation of context
+		// the stackMatch must match the known location in the stack.
+		// Otherwise we might return a malformed context
 		if stackMatch == 1 && strings.Contains(sc.Text(), "timerDescriptor") {
 			deadlineType = p1
 		} else if stackMatch == 2 && strings.Contains(sc.Text(), "cancelDescriptor") {
