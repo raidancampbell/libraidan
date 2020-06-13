@@ -13,7 +13,7 @@ import (
 )
 
 // (stuff)(package name).(function name)(type descriptor address, type value address(stuff)
-var pattern = regexp.MustCompile(`^.+[a-zA-Z][a-zA-Z0-9\-_]*\.[a-zA-Z][a-zA-Z0-9\-_]*\((?P<type_descriptor>0x[0-9a-f]+), (?P<type_value>0x[0-9a-f]+).+`)
+var pattern = regexp.MustCompile(`^.+[a-zA-Z][a-zA-Z0-9\-_]*\.[a-zA-Z][a-zA-Z0-9\-_]*\((?P<type_itab>0x[0-9a-f]+), (?P<type_value>0x[0-9a-f]+).+`)
 
 // RecoverCtx returns (from the bottom up) the first context that's encountered in the callstack
 // it stops the current goroutine to build a stacktrace, walks up the stack to find contexts, and returns the first one
@@ -21,7 +21,7 @@ var pattern = regexp.MustCompile(`^.+[a-zA-Z][a-zA-Z0-9\-_]*\.[a-zA-Z][a-zA-Z0-9
 // this is not guaranteed to work: many things can go wrong, chief among them is that inlined functions elide their parameter memory addresses
 // see https://dave.cheney.net/2019/12/08/dynamically-scoped-variables-in-go for a more thorough explanation on how this works
 func RecoverCtx() (context.Context, error) {
-	return emptyDescriptor(context.Background())
+	return emptyItab(context.Background())
 }
 
 //go:noinline
@@ -29,26 +29,26 @@ func RecoverCtx() (context.Context, error) {
 // We leverage this to identify parameter addresses that are a context.Context
 // Specifically, we must build up each of the concrete context.Context implementations
 // so that we have the full legal set of context descriptors.
-func emptyDescriptor(_ context.Context) (context.Context, error) {
-	return valueDescriptor(context.WithValue(context.Background(), "", ""))
+func emptyItab(_ context.Context) (context.Context, error) {
+	return valueItab(context.WithValue(context.Background(), "", ""))
 }
 
 //go:noinline
-func valueDescriptor(_ context.Context) (context.Context, error) {
+func valueItab(_ context.Context) (context.Context, error) {
 	ctx, c := context.WithCancel(context.Background())
 	defer c()
-	return cancelDescriptor(ctx)
+	return cancelItab(ctx)
 }
 
 //go:noinline
-func cancelDescriptor(_ context.Context) (context.Context, error) {
+func cancelItab(_ context.Context) (context.Context, error) {
 	ctx, c := context.WithDeadline(context.Background(), time.Now())
 	defer c()
-	return timerDescriptor(ctx)
+	return timerItab(ctx)
 }
 
 //go:noinline
-func timerDescriptor(_ context.Context) (context.Context, error) {
+func timerItab(_ context.Context) (context.Context, error) {
 	return doGetCtx()
 }
 
@@ -75,7 +75,7 @@ func doGetCtx() (context.Context, error) {
 
 		stackMatch++
 
-		// grab the two memory addresses (type descriptor and type value)
+		// grab the two memory addresses (itab and type value)
 		var p1, p2 uintptr
 		_, err1 := fmt.Sscanf(matches[1], "%v", &p1)
 		_, err2 := fmt.Sscanf(matches[2], "%v", &p2)
@@ -86,13 +86,13 @@ func doGetCtx() (context.Context, error) {
 		// build up the legal values for each implementation of context
 		// the stackMatch must match the known location in the stack.
 		// Otherwise we might return a malformed context
-		if stackMatch == 1 && strings.Contains(sc.Text(), "timerDescriptor") {
+		if stackMatch == 1 && strings.Contains(sc.Text(), "timerItab") {
 			deadlineType = p1
-		} else if stackMatch == 2 && strings.Contains(sc.Text(), "cancelDescriptor") {
+		} else if stackMatch == 2 && strings.Contains(sc.Text(), "cancelItab") {
 			cancelType = p1
-		} else if stackMatch == 3 && strings.Contains(sc.Text(), "valueDescriptor") {
+		} else if stackMatch == 3 && strings.Contains(sc.Text(), "valueItab") {
 			valueType = p1
-		} else if stackMatch == 4 && strings.Contains(sc.Text(), "emptyDescriptor") {
+		} else if stackMatch == 4 && strings.Contains(sc.Text(), "emptyItab") {
 			emptyType = p1
 		} else if p1 != emptyType && p1 != valueType && p1 != cancelType && p1 != deadlineType {
 			// if we're in the caller's code, and the first parameter isn't a known context implementation, then skip this stack frame

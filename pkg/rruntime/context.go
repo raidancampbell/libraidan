@@ -30,7 +30,7 @@ type SerializeOpts struct {
 	// RetainCancel indicates whether the given context's cancel function (if any)
 	// should be retained and re-inflated during deserialization.
 	RetainCancel bool
-	// RetainCancel indicates whether the given context's deadline (if any)
+	// RetainDeadline indicates whether the given context's deadline (if any)
 	// should be retained and re-inflated during deserialization.
 	RetainDeadline bool
 	// IgnoreFunctions indicates whether functions stored in the given context's values
@@ -165,18 +165,14 @@ func buildMap(ctx context.Context, s contextData) contextData {
 		}
 		if rs.Type() == timeCtxTyp {
 			// if there's multiple deadlines in a context, choose the earliest
-			if s.HasDeadline {
-				deadline := rs.FieldByName("deadline")
-				deadline = reflect.NewAt(deadline.Type(), unsafe.Pointer(deadline.UnsafeAddr())).Elem()
-				deadlineTime := deadline.Convert(reflect.TypeOf(time.Time{})).Interface().(time.Time)
-				if deadlineTime.Before(s.Deadline) {
-					s.Deadline = deadlineTime
-				}
+			deadline := rs.FieldByName("deadline")
+			deadline = reflect.NewAt(deadline.Type(), unsafe.Pointer(deadline.UnsafeAddr())).Elem()
+			deadlineTime := deadline.Convert(reflect.TypeOf(time.Time{})).Interface().(time.Time)
+			if s.HasDeadline && deadlineTime.Before(s.Deadline) {
+				s.Deadline = deadlineTime
 			} else {
 				s.HasDeadline = true
-				deadline := rs.FieldByName("deadline")
-				deadline = reflect.NewAt(deadline.Type(), unsafe.Pointer(deadline.UnsafeAddr())).Elem()
-				s.Deadline = deadline.Convert(reflect.TypeOf(time.Time{})).Interface().(time.Time)
+				s.Deadline = deadlineTime
 			}
 		}
 
