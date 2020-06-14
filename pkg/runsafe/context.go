@@ -1,3 +1,4 @@
+// Package runsafe contains things that leverage the unsafe builtin package.  Its contents should be treated as experimental and unstable.
 package runsafe
 
 import (
