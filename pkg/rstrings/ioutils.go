@@ -2,9 +2,12 @@
 package rstrings
 
 import (
+	"bufio"
 	"encoding/csv"
+	"io"
 	"io/ioutil"
 	"os"
+	"strings"
 )
 
 // FileToString reads from the given filename and returns the contents as a string
@@ -55,4 +58,46 @@ func CsvToMap(fname string) (result map[string][]string, err error) {
 	}
 
 	return
+}
+
+type OnlyWhitespace struct{
+	contents string
+}
+
+func (o OnlyWhitespace) Error() string {
+	return o.contents
+}
+
+// ReadStdInOrArgs is a forgiving function for receiving user input for CLI applications.  It attempts to read from
+// std input (e.g. `ls | myCoolProgram`).  If this fails, it takes the `os.arguments`, and joins them with a whitespace.
+// If the resulting string is only whitespace (e.g. `echo " " | myCoolProgram`), then the original string is returned
+// alongside an error of type OnlyWhitespace.
+func ReadStdInOrArgs() (string, error) {
+	var text string
+
+	info, err := os.Stdin.Stat()
+	// error is tolerable, this is a best-effort function, and we have alternatives
+	if err == nil {
+		if info.Mode()&os.ModeCharDevice != 0 || info.Size() <= 0 {
+			text = strings.Join(os.Args[1:], " ")
+		}
+	}
+
+	if len(text) == 0 {
+		reader := bufio.NewReader(os.Stdin)
+		var output []rune
+		for {
+			input, _, err := reader.ReadRune()
+			if err != nil && err == io.EOF {
+				break
+			}
+			output = append(output, input)
+		}
+		text = string(output)
+	}
+
+	if len(strings.TrimSpace(text)) == 0 {
+		return text, OnlyWhitespace{}
+	}
+	return text, nil
 }
