@@ -36,3 +36,7 @@ The `rstrings` package implements more niche or abbreviated string functions.
 #### [`rruntime`](https://godoc.org/github.com/raidancampbell/libraidan/pkg/rruntime)
 
 The `rruntime` package contains useful runtime or meta functions.
+
+#### [`rnet`](https://godoc.org/github.com/raidancampbell/libraidan/pkg/rnet)
+
+The `rnet` package contains networking related functions.
