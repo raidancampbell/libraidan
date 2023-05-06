@@ -1,3 +1,5 @@
+//go:build !go1.20
+
 // Package runsafe contains things that leverage the unsafe builtin package.  Its contents should be treated as experimental and unstable.
 package runsafe
 
@@ -51,14 +53,6 @@ func cancelItab(ctx context.Context) (context.Context, error) {
 
 //go:noinline
 func timerItab(ctx context.Context) (context.Context, error) {
-	ctx2, c := context.WithCancelCause(ctx)
-	// the exact error used here doesn't matter, we use the predefined error to avoid creating a new one each time.
-	defer c(UnrecoverableContext{})
-	return causeItab(ctx2)
-}
-
-//go:noinline
-func causeItab(ctx context.Context) (context.Context, error) {
 	_ = ctx.Value("foo")
 	return doGetCtx()
 }
@@ -70,8 +64,8 @@ func doGetCtx() (context.Context, error) {
 	n := runtime.Stack(buf[:], false) // get the current callstack as a string
 	sc := bufio.NewScanner(bytes.NewReader(buf[:n]))
 	var (
-		causeType, deadlineType, cancelType, valueType, emptyType uintptr // hold the type descriptor pointers for each of the context implementations
-		stackMatch                                                int     // used to count our way up the stack, as the stack is constant the lowest few levels and we need to leverage that
+		deadlineType, cancelType, valueType, emptyType uintptr // hold the type descriptor pointers for each of the context implementations
+		stackMatch                                     int     // used to count our way up the stack, as the stack is constant the lowest few levels and we need to leverage that
 	)
 	for sc.Scan() { // for each line (walking up the stack from here)
 		// if the line doesn't match, skip.
@@ -97,22 +91,20 @@ func doGetCtx() (context.Context, error) {
 		// build up the legal values for each implementation of context
 		// the stackMatch must match the known location in the stack.
 		// Otherwise we might return a malformed context
-		if stackMatch == 1 && strings.Contains(sc.Text(), "causeItab") {
-			causeType = p1
-		} else if stackMatch == 2 && strings.Contains(sc.Text(), "timerItab") {
+		if stackMatch == 1 && strings.Contains(sc.Text(), "timerItab") {
 			deadlineType = p1
-		} else if stackMatch == 3 && strings.Contains(sc.Text(), "cancelItab") {
+		} else if stackMatch == 2 && strings.Contains(sc.Text(), "cancelItab") {
 			cancelType = p1
-		} else if stackMatch == 4 && strings.Contains(sc.Text(), "valueItab") {
+		} else if stackMatch == 3 && strings.Contains(sc.Text(), "valueItab") {
 			valueType = p1
-		} else if stackMatch == 5 && strings.Contains(sc.Text(), "emptyItab") {
+		} else if stackMatch == 4 && strings.Contains(sc.Text(), "emptyItab") {
 			emptyType = p1
-		} else if p1 != emptyType && p1 != valueType && p1 != cancelType && p1 != deadlineType && p1 != causeType {
+		} else if p1 != emptyType && p1 != valueType && p1 != cancelType && p1 != deadlineType {
 			// if we're in the caller's code, and the first parameter isn't a known context implementation, then skip this stack frame
 			continue
 		}
 
-		if stackMatch <= 5 { // we're still building the legal context implementations
+		if stackMatch <= 4 { // we're still building the legal context implementations
 			continue
 		}
 
