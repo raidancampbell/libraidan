@@ -19,7 +19,7 @@ func IsEmpty(s string) bool {
 }
 
 // DefaultIfEmpty returns the given string.
-//If the given string is empty (see rstrings.IsEmpty), the given default is returned
+// If the given string is empty (see rstrings.IsEmpty), the given default is returned
 func DefaultIfEmpty(s, deflt string) string {
 	if IsEmpty(s) {
 		return deflt
@@ -110,4 +110,18 @@ func EnsureWrapped(input string, wrapper string) string {
 		return wrapper + wrapper
 	}
 	return EnsureSuffix(EnsurePrefix(input, wrapper), wrapper)
+}
+
+// IsNumeric returns whether the given string is numeric (only contains digits)
+// an empty string is considered non-numeric
+func IsNumeric(input string) bool {
+	if len(input) == 0 {
+		return false
+	}
+	for i := range input {
+		if input[i] < '0' || input[i] > '9' {
+			return false
+		}
+	}
+	return true
 }

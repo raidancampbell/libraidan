@@ -168,3 +168,29 @@ func TestEnsureWrapped(t *testing.T) {
 		})
 	}
 }
+
+func TestIsNumeric(t *testing.T) {
+	type args struct {
+		input string
+	}
+	tests := []struct {
+		name string
+		args args
+		want bool
+	}{
+		{"single digit", args{"1"}, true},
+		{"multiple digits", args{"1212"}, true},
+
+		{"no digits", args{"foo bar"}, false},
+		{"single char", args{"f"}, false},
+		{"whitespace", args{" "}, false},
+		{"unicode", args{"ë"}, false},
+
+		{"empty", args{""}, false},
+	}
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			assert.Equalf(t, tt.want, IsNumeric(tt.args.input), "IsNumeric(%v)", tt.args.input)
+		})
+	}
+}
