@@ -15,7 +15,8 @@ func Test_getCtx(t *testing.T) {
 	assert.Equal(t, "quux", recovered.Value("baz"))
 }
 
-func receivesAndDrops(_ context.Context) (context.Context, error) {
+func receivesAndDrops(ctx context.Context) (context.Context, error) {
+	_ = ctx.Value("foo")
 	return lacksAndCreates()
 }
 
@@ -24,7 +25,8 @@ func lacksAndCreates() (context.Context, error) {
 }
 
 //go:noinline
-func intermediate(_ context.Context) (context.Context, error) {
+func intermediate(ctx context.Context) (context.Context, error) {
+	_ = ctx.Value("foo")
 	return redHerring(-1, 42)
 }
 

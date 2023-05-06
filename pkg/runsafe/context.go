@@ -14,7 +14,7 @@ import (
 )
 
 // (stuff)(package name).(function name)(type descriptor address, type value address(stuff)
-var pattern = regexp.MustCompile(`^.+[a-zA-Z][a-zA-Z0-9\-_]*\.[a-zA-Z][a-zA-Z0-9\-_]*\((?P<type_itab>0x[0-9a-f]+), (?P<type_value>0x[0-9a-f]+).+`)
+var pattern = regexp.MustCompile(`^.+[a-zA-Z][a-zA-Z0-9\-_]*\.[a-zA-Z][a-zA-Z0-9\-_]*\(\{?(?P<type_itab>0x[0-9a-f]+)\??, (?P<type_value>0x[0-9a-f]+).+`)
 
 // RecoverCtx returns (from the bottom up) the first context that's encountered in the callstack
 // it stops the current goroutine to build a stacktrace, walks up the stack to find contexts, and returns the first one
@@ -25,31 +25,33 @@ func RecoverCtx() (context.Context, error) {
 	return emptyItab(context.Background())
 }
 
-//go:noinline
 // type descriptors addresses are seemingly constant for a given goroutine
 // We leverage this to identify parameter addresses that are a context.Context
 // Specifically, we must build up each of the concrete context.Context implementations
 // so that we have the full legal set of context descriptors.
-func emptyItab(_ context.Context) (context.Context, error) {
-	return valueItab(context.WithValue(context.Background(), "", ""))
+//
+//go:noinline
+func emptyItab(ctx context.Context) (context.Context, error) {
+	return valueItab(context.WithValue(ctx, "foo", "bar"))
 }
 
 //go:noinline
-func valueItab(_ context.Context) (context.Context, error) {
-	ctx, c := context.WithCancel(context.Background())
+func valueItab(ctx context.Context) (context.Context, error) {
+	ctx2, c := context.WithCancel(ctx)
 	defer c()
-	return cancelItab(ctx)
+	return cancelItab(ctx2)
 }
 
 //go:noinline
-func cancelItab(_ context.Context) (context.Context, error) {
-	ctx, c := context.WithDeadline(context.Background(), time.Now())
+func cancelItab(ctx context.Context) (context.Context, error) {
+	ctx2, c := context.WithDeadline(ctx, time.Now().Add(time.Minute))
 	defer c()
-	return timerItab(ctx)
+	return timerItab(ctx2)
 }
 
 //go:noinline
-func timerItab(_ context.Context) (context.Context, error) {
+func timerItab(ctx context.Context) (context.Context, error) {
+	_ = ctx.Value("foo")
 	return doGetCtx()
 }
 
